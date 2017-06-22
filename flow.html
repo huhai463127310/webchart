@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <script src="http://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/raphael/2.2.7/raphael.min.js"></script>
+    <script src="http://cdn.bootcss.com/underscore.js/1.8.3/underscore-min.js"></script>
+    <script src="http://cdn.bootcss.com/ace/1.2.6/ace.js"></script>
+    <script src="http://cdn.bootcss.com/flowchart/1.6.6/flowchart.min.js"></script>
+    <script src="jslib/svginnerhtml.min.js"></script>
+    <style type="text/css">
+    table,
+    table tr th,
+    table tr td {
+        border: 1px solid #0094ff;
+    }
+    
+    table {
+        width: 100%;
+        min-height: 600px;
+        height: 100%;
+        line-height: 25px;
+        text-align: center;
+        border-collapse: collapse;
+    }
+    
+    #position {
+        position: absolute;
+    }
+    
+    .editor {
+        position: relative;
+        width: 500px;
+        height: 600px;
+        font-size: 16px;
+    }
+    .tab a{display:inline-block; border: 1px solid #0094ff; border-bottom:0; width:80px; text-align: center; text-decoration: none;}
+    .active{background-color: #0094ff; color:#FFFFFF;}
+    .logo{font-family:"Arial Black";font-size: 12pt;font-weight: bold; }
+    </style>
+</head>
+
+<body>
+    <div id="main">
+    	<div class="tab">
+            <label class="logo">Web Chart</label>
+			<a href="index.html">时序图</a>
+			<a class="active"  href="flow.html">流程图</a>
+    	</div>
+        <section id="demo2">
+            <table align="center" class="inner">
+                <tr>
+                    <td width="500">
+                        <h3>流程图</h3>
+                        <div class="editor-wrapper">
+                            <div class="editor editor2">st=>start: Start|past:>http://www.google.com[blank]
+e=>end: End|future:>http://www.google.com
+op1=>operation: My Operation|past
+op2=>operation: Stuff|current
+sub1=>subroutine: My Subroutine|invalid
+cond=>condition: Yes
+or No?|approved:>http://www.google.com
+c2=>condition: Good idea|rejected
+io=>inputoutput: catch something...|future
+
+st->op1(right)->cond
+cond(yes, right)->c2
+cond(no)->sub1(left)->op1
+c2(yes)->io->e
+c2(no)->op2->e</div>
+                        </div>
+                        主题:
+			            <select class="theme">
+			              <option value="1">黑白</option>
+			              <option value="2" selected>彩色</option>
+			            </select>
+            			| <a href="#" class="download">下载SVG</a>
+            			| <a href="http://flowchart.js.org" target="_blank">帮助</href>
+                    </td>
+                    <td class="diagram diagram2">This should be a diagram! If you do not see it you need Javascript enabled</td>
+                </tr>
+            </table>
+        </section>
+    </div>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        function setup_editor(div, nr) {
+
+            var editor_div = div.find(".editor");
+            var diagram_div = div.find(".diagram");
+            var theme_div = div.find(".theme" );
+            var download_link = div.find('.download');
+
+            // Setup the editor diagram
+            var editor = ace.edit(editor_div.get(0));
+            editor.setTheme("ace/theme/crimson_editor");
+            editor.getSession().setMode("ace/mode/asciidoc");
+            editor.getSession().on('change', _.debounce(on_change, 100));
+
+            download_link.click(function(ev) {
+                var svg = diagram_div.find('svg')[0];
+                var width = parseInt(svg.width.baseVal.value);
+                var height = parseInt(svg.height.baseVal.value);
+                var data = editor.getValue();
+                var xml = '<?xml version="1.0" encoding="utf-8" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd"><svg xmlns="http://www.w3.org/2000/svg" width="' + width + '" height="' + height + '" xmlns:xlink="http://www.w3.org/1999/xlink"><source><![CDATA[' + data + ']]></source>' + svg.innerHTML + '</svg>';
+
+                var a = $(this);
+                a.attr("download", "flow_diagram.svg"); // TODO I could put title here
+                a.attr("href", "data:image/svg+xml," + encodeURIComponent(xml));
+            });
+
+            theme_div.change(on_change);
+            on_change();
+
+            function on_change() {
+                try {
+                    var diagram = flowchart.parse(editor.getValue());
+
+                    editor.getSession().setAnnotations([]);
+
+                    // Clear out old diagram
+                    diagram_div.html('');
+                    var nr = theme_div.val();
+                    // Draw
+                    if (nr == '1') {
+                        diagram.drawSVG(diagram_div.get(0));
+                    } else if (nr === '2') {
+                        diagram.drawSVG(diagram_div.get(0), {
+                            'flowstate': {
+                                'past': {
+                                    'fill': '#CCCCCC',
+                                    'font-size': 12
+                                },
+                                'current': {
+                                    'fill': 'yellow',
+                                    'font-color': 'red',
+                                    'font-weight': 'bold'
+                                },
+                                'future': {
+                                    'fill': '#FFFF99'
+                                },
+                                'invalid': {
+                                    'fill': '#444444'
+                                },
+                                'approved': {
+                                    'fill': '#58C4A3',
+                                    'font-size': 12,
+                                    'yes-text': 'APPROVED',
+                                    'no-text': 'n/a'
+                                },
+                                'rejected': {
+                                    'fill': '#C45879',
+                                    'font-size': 12,
+                                    'yes-text': 'n/a',
+                                    'no-text': 'REJECTED'
+                                }
+                            }
+                        });
+                    }
+
+                } catch (err) {
+                    var annotation = {
+                        type: "error", // also warning and information
+                        column: 0,
+                        row: 0,
+                        text: err.message
+                    };
+                    if (err && err.loc) {
+                        annotation.row = err.loc.first_line - 1;
+                        annotation.column = err.loc.first_column;
+                    }
+                    editor.getSession().setAnnotations([annotation]);
+                    throw err;
+                }
+            }
+        }
+        setup_editor($('#demo2'));
+    });
+    </script>
+</body>
+
+</html>

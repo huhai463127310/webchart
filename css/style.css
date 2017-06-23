@@ -1,0 +1,30 @@
+.left{float: left}
+.right{float: right}
+table,
+table tr th,
+table tr td {
+    border: 1px solid #0094ff;
+    padding: 0;
+}
+
+table {
+    width: 100%;
+    min-height: 600px;
+    height: 100%;
+    line-height: 25px;
+    text-align: center;
+    border-collapse: collapse;
+}
+
+.editor {
+    width: 500px;
+    height: 600px;
+}
+.tab a{display:inline-block; border: 1px solid #0094ff; border-bottom:0; width:80px; text-align: center; text-decoration: none;}
+.active{background-color: #0094ff; color:#FFFFFF;}
+.logo{font-family:"Arial Black";font-size: 12pt;font-weight: bold; }
+.toolbar{background-color: #4A4A4A;color: #FFFFFF;font-size: 10pt; height: 25px;}
+.toolbar a{text-decoration: none;color: #FFFFFF;}
+.toolbar a:hover{color: #EE00EE}
+.toolbar .left{width:100px;}
+.toolbar .right{padding-right: 4px;}

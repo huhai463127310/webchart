@@ -4,6 +4,7 @@
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="css/style.css" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" href="css/sequence-diagram-min.css" media="screen" />
     <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>    
     <script src="https://cdn.bootcss.com/webfont/1.6.6/webfontloader.js"></script>
@@ -12,36 +13,6 @@
     <script src="https://cdn.bootcss.com/ace/1.2.6/ace.js"></script>
     <script src="jslib/svginnerhtml.min.js"></script>
     <script src="jslib/sequence-diagram-min.js"></script>
-    <style type="text/css">
-    table,
-    table tr th,
-    table tr td {
-        border: 1px solid #0094ff;
-    }
-    
-    table {
-        width: 100%;
-        min-height: 600px;
-        height:100%;
-        line-height: 25px;
-        text-align: center;
-        border-collapse: collapse;
-    }
-    #position{position:absolute;}
-    .editor {
-    	position: relative;
-        width: 500px;
-        height: 600px;
-        font-size: 16px;
-    }
-    .editor-wrapper {
-        width: 500px;
-        height: 600px;
-    }
-    .tab a{display:inline-block; border: 1px solid #0094ff; border-bottom:0; width:80px; text-align: center; text-decoration: none;}
-    .active{background-color: #0094ff; color:#FFFFFF;}
-    .logo{font-family:"Arial Black";font-size: 12pt;font-weight: bold; }
-    </style>
 </head>
 
 <body>
@@ -55,20 +26,25 @@
             <table align="center" class="inner">
                 <tr>
                     <td width="500">
-                        <h3>时序图</h3>
+                        <div class="toolbar">
+                            <div class="left">
+                                主题:
+                                <select class="theme">
+                                    <option value="simple" selected>默认</option>
+                                    <option value="hand">手绘</option>
+                                </select>
+                            </div>
+                            <div class="right">
+                                <a href="#" class="download">下载 SVG</a>
+                                | <a href="https://bramp.github.io/js-sequence-diagrams" target="_blank">帮助</a>
+                            </div>
+                        </div>
                         <div class="editor-wrapper">
                             <div class="editor">Andrew->China: Says Hello
 Note right of China: China thinks\nabout it
 China-->Andrew: How are you?
 Andrew->>China: I am good thanks!</div>
                         </div>
-                        主题:
-                        <select class="theme">
-                            <option value="simple" selected>默认</option>
-                            <option value="hand">手绘</option>
-                        </select>
-                        | <a href="#" class="download">下载 SVG</a>
-                        | <a href="https://bramp.github.io/js-sequence-diagrams" target="_blank">帮助</href>
                     </td>
                     <td class="diagram">This should be a diagram! If you don't see it you need Javascript enabled</td>
                 </tr>

@@ -67,6 +67,7 @@ Andrew->>China: I am good thanks!</div>
 
             // Setup the editor diagram
             var editor = ace.edit(editor_div.get(0));
+            editor.$blockScrolling = Infinity;
             editor.setTheme("ace/theme/crimson_editor");
             editor.getSession().setMode("ace/mode/asciidoc");
             editor.getSession().on('change', _.debounce(on_change, 100));

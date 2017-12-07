@@ -42,7 +42,7 @@
                             </div>
                         </div>
                         <div class="editor-wrapper">
-                            <div class="editor editor2">st=>start: Start|past:>http://www.google.com[blank]
+                            <div class="editor editor2 ">st=>start: Start|past:>http://www.google.com[blank]
 e=>end: End|future:>http://www.google.com
 op1=>operation: My Operation|past
 op2=>operation: Stuff|current
@@ -51,7 +51,6 @@ cond=>condition: Yes
 or No?|approved:>http://www.google.com
 c2=>condition: Good idea|rejected
 io=>inputoutput: catch something...|future
-
 st->op1(right)->cond
 cond(yes, right)->c2
 cond(no)->sub1(left)->op1
@@ -79,6 +78,8 @@ c2(no)->op2->e</div>
             editor.setTheme("ace/theme/crimson_editor");
             editor.getSession().setMode("ace/mode/asciidoc");
             editor.getSession().on('change', _.debounce(on_change, 100));
+            editor.setValue(loadData());
+            editor.gotoLine(1);
 
             download_link.click(function(ev) {
                 var svg = diagram_div.find('svg')[0];
@@ -98,7 +99,7 @@ c2(no)->op2->e</div>
             function on_change() {
                 try {
                     var diagram = flowchart.parse(editor.getValue());
-
+                    saveData(editor);
                     editor.getSession().setAnnotations([]);
 
                     // Clear out old diagram
@@ -156,9 +157,19 @@ c2(no)->op2->e</div>
                     throw err;
                 }
             }
+
+
         }
         setup_editor($('#demo2'));
-    });
+        function loadData (){
+            var data =localStorage.getItem('text');
+           return data;
+        }
+        function saveData (editor){
+            var text = editor.getValue();
+            localStorage.setItem('text',text);
+        }
+   });
     </script>
     <!--百度统计-->
     <script>

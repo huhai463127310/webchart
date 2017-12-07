@@ -70,6 +70,8 @@ Andrew->>China: I am good thanks!</div>
             editor.setTheme("ace/theme/crimson_editor");
             editor.getSession().setMode("ace/mode/asciidoc");
             editor.getSession().on('change', _.debounce(on_change, 100));
+            editor.setValue(loadData());
+            editor.gotoLine(1);
 
             download_link.click(function(ev) {
                 var svg = diagram_div.find('svg')[0];
@@ -90,6 +92,7 @@ Andrew->>China: I am good thanks!</div>
                 try {
                     var diagram = Diagram.parse(editor.getValue());
                     editor.getSession().setAnnotations([]);
+                    saveData(editor);
 
                     // Clear out old diagram
                     diagram_div.html('');
@@ -119,6 +122,14 @@ Andrew->>China: I am good thanks!</div>
         }
 
         setup_editor($('#demo'));
+        function loadData (){
+            var data =localStorage.getItem('data');
+            return data;
+        }
+        function saveData (editor){
+            var text = editor.getValue();
+            localStorage.setItem('data',text);
+        }
     });
     </script>
     <!--百度统计-->

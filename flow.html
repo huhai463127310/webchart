@@ -36,7 +36,8 @@
                                 </select>
                             </div>
                             <div class="right">
-                                <a href="#" class="download">下载SVG</a>
+                                <a href="#" class="download">下载图片</a>
+                                | <a href="#" class="case">示例</a>
                                 | <a href="http://flowchart.js.org" target="_blank">帮助</a>
                                 | <a href="https://github.com/huhai463127310/webchart/issues/new" target="_blank">反馈</a>
                             </div>
@@ -66,6 +67,21 @@ c2(no)->op2->e</div>
     <a href="https://github.com/huhai463127310/webchart"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
     <script type="text/javascript">
     $(document).ready(function() {
+        var code_default ='st=>start: Start|past:>http://www.google.com[blank]\n'+
+                'e=>end: End|future:>http://www.google.com\n'+
+                'op1=>operation: My Operation|past\n'+
+                'op2=>operation: Stuff|current\n'+
+                'sub1=>subroutine: My Subroutine|invalid\n'+
+                'cond=>condition: Yes\n'+
+                'or No?|approved:>http://www.google.com\n'+
+                'c2=>condition: Good idea|rejected\n'+
+                'io=>inputoutput: catch something...|future\n'+
+                'st->op1(right)->cond\n'+
+                'cond(yes, right)->c2\n'+
+                'cond(no)->sub1(left)->op1\n'+
+                'c2(yes)->io->e\n'+
+                'c2(no)->op2->e';
+
         function setup_editor(div, nr) {
 
             var editor_div = div.find(".editor");
@@ -79,8 +95,8 @@ c2(no)->op2->e</div>
             editor.setTheme("ace/theme/crimson_editor");
             editor.getSession().setMode("ace/mode/asciidoc");
             editor.getSession().on('change', _.debounce(on_change, 100));
-            editor.setValue(loadData());
-            editor.gotoLine(1);
+            loadData(editor);
+            $('.case').click({editor:editor},resetData);
 
             download_link.click(function(ev) {
                 var svg = diagram_div.find('svg')[0];
@@ -162,13 +178,28 @@ c2(no)->op2->e</div>
 
         }
         setup_editor($('#demo2'));
-        function loadData (){
-            var data =localStorage.getItem('text');
-           return data;
+        function loadData (editor){
+            var data =localStorage.getItem('code_flow');
+            if(data && data!==''){
+                editor.setValue(data);
+                editor.gotoLine(1);
+            }
         }
         function saveData (editor){
-            var text = editor.getValue();
-            localStorage.setItem('text',text);
+            var code = editor.getValue();
+            if( code!==''&& code!==code_default ){
+                localStorage.setItem('code_flow',code);
+            }
+        }
+        function resetData (event){
+            var init_default =event.data.editor.getValue();
+            if(init_default !== code_default) {
+                var result = confirm('提示：示例代码将覆盖现有代码，刷新页面即可恢复。确认继续？');
+                if (result) {
+                    event.data.editor.setValue(code_default);
+                    event.data.editor.gotoLine(1);
+                }
+            }
         }
    });
     </script>

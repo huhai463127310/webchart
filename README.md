@@ -2,6 +2,10 @@
 在线代码绘制流程图、时序图  
 **[去留言](https://github.com/huhai463127310/webchart/issues/new)**
 
+## 在线沟通
+感谢各位支持，我建立了一个QQ群，以便交流使用问题或者建议，群号 **559741738**。
+
+
 运行效果：[webchart.ihuhai.cn](http://webchart.ihuhai.cn)  
 ![webchart-时序图](https://pic2.zhimg.com/v2-df966853768a168d29ea68689f19cd25_r.png "webchart-时序图")  
 ![webchart-流程图](https://pic2.zhimg.com/v2-5ddccf0874deb85776043af1adacc585_r.png "webchart-流程图")  
